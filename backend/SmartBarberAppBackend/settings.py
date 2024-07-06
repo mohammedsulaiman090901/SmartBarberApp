@@ -1,3 +1,5 @@
+from corsheaders.defaults import default_headers
+from corsheaders.defaults import default_methods
 from pathlib import Path
 from datetime import timedelta
 
@@ -140,7 +142,6 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = list(default_methods)
+CORS_ALLOW_HEADERS = list(default_headers)
