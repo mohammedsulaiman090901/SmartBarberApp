@@ -1,30 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-  const [bookings, setBookings] = useState([]);
+    const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/bookings/').then(response => {
-      setBookings(response.data);
-    });
-  }, []);
+    useEffect(() => {
+        const fetchMessage = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/customer-dashboard/', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+                setMessage(response.data.message);
+            } catch (error) {
+                console.error('Dashboard error', error);
+                alert('You need to log in to access this page.');
+                window.location.href = '/login';
+            }
+        };
+        fetchMessage();
+    }, []);
 
-  return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Welcome to your Dashboard!
-      </Typography>
-      <List>
-        {bookings.map(booking => (
-          <ListItem key={booking.id}>
-            <ListItemText primary={`${booking.service} with ${booking.barber}`} secondary={booking.time_slot} />
-          </ListItem>
-        ))}
-      </List>
-    </Container>
-  );
+    return (
+        <div>
+            <h2>Dashboard</h2>
+            <p>{message}</p>
+            <nav>
+                <ul>
+                    <li><Link to="/login">Login</Link></li>
+                    <li><Link to="/register">Register</Link></li>
+                    <li><Link to="/services">Explore Services</Link></li>
+                    <li><Link to="/barbers">Meet Our Barbers</Link></li>
+                    <li><Link to="/booking">Book an Appointment</Link></li>
+                </ul>
+            </nav>
+        </div>
+    );
 };
 
 export default Dashboard;
