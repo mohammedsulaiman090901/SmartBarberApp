@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Service, Booking
+from .models import CustomUser, Service, Booking, Barber
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,4 +14,9 @@ class ServiceSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = ('id', 'customer', 'barber', 'service', 'time_slot', 'status')
+        fields = ('id', 'service', 'user', 'start_time', 'end_time')
+
+class BarberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Barber
+        fields = ('id', 'user', 'rating')

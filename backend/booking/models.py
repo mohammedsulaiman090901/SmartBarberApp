@@ -11,17 +11,23 @@ class CustomUser(AbstractUser):
 
 class Service(models.Model):
     name = models.CharField(max_length=100)
-    duration = models.IntegerField()  # Duration in minutes
+    duration = models.DurationField()
 
     def __str__(self):
         return self.name
 
 class Booking(models.Model):
-    customer = models.ForeignKey(CustomUser, related_name='bookings', on_delete=models.CASCADE)
-    barber = models.ForeignKey(CustomUser, related_name='appointments', on_delete=models.CASCADE)
-    service = models.ForeignKey(Service, related_name='bookings', on_delete=models.CASCADE)
-    time_slot = models.DateTimeField()
-    status = models.CharField(max_length=20, default='pending')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
     def __str__(self):
-        return f'{self.customer} - {self.service} - {self.time_slot}'
+        return f"{self.service.name} - {self.user.username}"
+
+class Barber(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    rating = models.FloatField()
+
+    def __str__(self):
+        return self.user.username
